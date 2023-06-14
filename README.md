@@ -2,5 +2,5 @@
   PORT=5000
   BROWSER=none
 # screenshots
-    screen shots are added in assets
+  screen shots are added in assets
     
