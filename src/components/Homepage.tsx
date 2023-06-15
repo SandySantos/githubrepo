@@ -80,14 +80,14 @@ const Homepage = () => {
               </tbody>
             </table>
           </div>
+          <Pagination
+            onNext={onNextPage}
+            onPrev={onPrevPage}
+            currentPage={currentPage}
+            totalPages={totalPages}
+          />
         </>
       )}
-      <Pagination
-        onNext={onNextPage}
-        onPrev={onPrevPage}
-        currentPage={currentPage}
-        totalPages={totalPages}
-      />
     </>
   );
 };
