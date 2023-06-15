@@ -1,7 +1,8 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getRepositoryList } from '../redux/actions';
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
+import Pagination from './Pagination';
 
 const Homepage = () => {
   const navigate = useNavigate();
@@ -14,9 +15,27 @@ const Homepage = () => {
   }, [dispatch]);
 
   const tableconst = ['Name', 'Full Name', 'description', 'URL'];
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const totalPages = Math.ceil(repositorylist.length / 5);
+
+  const onPrevPage = () => {
+    setCurrentPage((prevPage) => prevPage - 1);
+  };
+  const onNextPage = () => {
+    console.log('hii');
+
+    setCurrentPage((prevPage) => prevPage + 1);
+  };
+
+  const startIndex = (currentPage - 1) * 5;
+  const endIndex = startIndex + 5;
+  const paginatedData = repositorylist.slice(startIndex, endIndex);
+  console.log(paginatedData);
+
   return (
     <>
-      {repositorylist && repositorylist.length > 0 && (
+      {paginatedData && paginatedData.length > 0 && (
         <>
           <div className='text-center text-3xl font-semibold underline underline-offset-8'>
             Repositry List
@@ -33,7 +52,7 @@ const Homepage = () => {
                 </tr>
               </thead>
               <tbody>
-                {repositorylist.map((data: any, listidx: number) => (
+                {paginatedData.map((data: any, listidx: number) => (
                   <tr
                     key={listidx.toString()}
                     onClick={() => {
@@ -63,6 +82,12 @@ const Homepage = () => {
           </div>
         </>
       )}
+      <Pagination
+        onNext={onNextPage}
+        onPrev={onPrevPage}
+        currentPage={currentPage}
+        totalPages={totalPages}
+      />
     </>
   );
 };
