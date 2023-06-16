@@ -1,5 +1,5 @@
 import axios, { AxiosResponse } from 'axios';
-import { REPO_DETAILS, REPO_LIST } from './types';
+import { REPO_DETAILS, REPO_DETAILS_ERROR, REPO_LIST } from './types';
 import { AppDispatch } from './store';
 
 export const getRepositoryList = () => (dispatch: AppDispatch) => {
@@ -19,16 +19,16 @@ export const getRepositoryList = () => (dispatch: AppDispatch) => {
 
 export const getRepositoryDetails =
   (account: string) => (dispatch: AppDispatch) => {
-    console.log('!!!!!!!!!!QQQQQQ');
     const textArray: Array<string> = account?.split(':');
     const url = `https://api.github.com/repos/${textArray[0]}/${textArray[1]}`;
     axios
       .get(url)
       .then((res) => {
-        console.log('222', res);
         dispatch({ type: REPO_DETAILS, payload: res.data });
       })
       .catch((err) => {
         console.log(err);
+        const { message } = err.response.data;
+        dispatch({ type: REPO_DETAILS_ERROR, payload: message });
       });
   };

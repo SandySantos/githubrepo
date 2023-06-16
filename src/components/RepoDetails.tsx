@@ -1,9 +1,11 @@
 import { useEffect } from 'react';
-import { useParams } from 'react-router-dom';
-import { getRepositoryDetails } from '../redux/actions';
-import { useAppDispatch, useAppSelector } from '../redux/hooks';
+import { useNavigate, useParams } from "react-router-dom";
+import { getRepositoryDetails } from "../redux/actions";
+import { useAppDispatch, useAppSelector } from "../redux/hooks";
 
 const RepoDetails = () => {
+  const navigate = useNavigate();
+  const goTo = (url: string) => navigate(url);
   const { account } = useParams();
 
   // const [reportdetails, SetReportdetails] = useState<any>();
@@ -16,14 +18,19 @@ const RepoDetails = () => {
     }
   }, [account, dispatch]);
 
+  const error: any = useAppSelector((state) => state.repo.error);
+  if (error) {
+    goTo("*");
+  }
+
   return (
     <>
       {reportdetails ? (
-        <div className=' max-w-5xl m-3 p-3 flex justify-center items-center gap-2 border shadow-md rounded-md'>
+        <div className=" max-w-5xl m-3 p-3 flex justify-center items-center gap-2 border shadow-md rounded-md">
           <div>
             {reportdetails.owner.avatar_url && (
-              <div className='w-24 h-24 rounded-full'>
-                <img src={reportdetails.owner.avatar_url} alt='avatar_url' />
+              <div className="w-24 h-24 rounded-full">
+                <img src={reportdetails.owner.avatar_url} alt="avatar_url" />
               </div>
             )}
             {reportdetails.name && <div>Name:{reportdetails.name}</div>}
