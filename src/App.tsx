@@ -5,6 +5,7 @@ import RepoDetails from './components/RepoDetails';
 import NotFound from './components/NotFound';
 import { Provider } from 'react-redux';
 import { store } from './redux/store';
+import ProtectedRoute from './components/ProtectedRoute';
 
 const App = () => {
   return (
@@ -13,7 +14,14 @@ const App = () => {
         <Routes>
           <Route path='/' element={<Login />} />
           <Route path='/home/' element={<Homepage />} />
-          <Route path='/repodetails/:account' element={<RepoDetails />} />
+          <Route
+            path='/repodetails/:account'
+            element={
+              <ProtectedRoute>
+                <RepoDetails />
+              </ProtectedRoute>
+            }
+          />
           <Route path='*' element={<NotFound />} />
         </Routes>
       </Router>

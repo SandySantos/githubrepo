@@ -1,14 +1,26 @@
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { getRepositoryList } from '../redux/actions';
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
 import Pagination from './Pagination';
+import { Navigate } from 'react-router-dom';
 
 const Homepage = () => {
   const navigate = useNavigate();
   const goTo = (url: string) => navigate(url);
 
   const dispatch = useAppDispatch();
+
+  const { search } = useLocation();
+  const searchParams = new URLSearchParams(search);
+  const code = searchParams.get('code');
+
+  useEffect(() => {
+    if (code) {
+      localStorage.setItem('code', code);
+    }
+  }, [code]);
+
   const repositorylist = useAppSelector((state) => state.repo.repolist);
   useEffect(() => {
     dispatch(getRepositoryList());
@@ -23,8 +35,6 @@ const Homepage = () => {
     setCurrentPage((prevPage) => prevPage - 1);
   };
   const onNextPage = () => {
-    console.log('hii');
-
     setCurrentPage((prevPage) => prevPage + 1);
   };
 
@@ -33,6 +43,9 @@ const Homepage = () => {
   const paginatedData = repositorylist.slice(startIndex, endIndex);
   console.log(paginatedData);
 
+  if (!code) {
+    return <Navigate to='/' replace />;
+  }
   return (
     <>
       {paginatedData && paginatedData.length > 0 && (
